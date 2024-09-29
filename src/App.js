@@ -1,10 +1,10 @@
-import Register from "./pages/Register";
 
+import AppRouter from "./router/AppRouter";
 
 function App() {
   return (
-    <div className="App">
-      <Register />
+    <div className="dark:bg-gray-dark-main min-h-screen">
+      <AppRouter />
     </div>
   );
 }
