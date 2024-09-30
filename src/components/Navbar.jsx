@@ -12,7 +12,7 @@ import { useAuthContext } from "../context/AuthProvider";
 
 export default function Navbar() {
 
-    const {currentUser} = useAuthContext()
+    const {currentUser, logOut} = useAuthContext()
 //   const currentUser = { displayName: "MEK" };
   // const currentUser = false
   return (
@@ -72,6 +72,7 @@ export default function Navbar() {
                 <MenuItem>
                   <span
                     role="button"
+                    onClick={()=> logOut()}
                     className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 cursor-pointer"
                   >
                     Logout
