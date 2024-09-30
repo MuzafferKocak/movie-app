@@ -17,11 +17,12 @@ const Register = () => {
     setInfo({ ...info, [e.target.name]: e.target.value });
   console.log(info);
 
-  const { email, password } = info;
+  const { email, password, firstName, lastName } = info;
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    createUser(email, password);
+    const displayName = `${firstName} ${lastName}`
+    createUser(email, password, displayName);
     console.log(info);
   };
 

@@ -1,6 +1,12 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { auth } from "../auth/firebase";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signOut,
+  updateProfile,
+} from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { toastErrorNotify, toastSuccessNotify } from "../helpers/ToastNotify";
 
@@ -13,21 +19,30 @@ export const useAuthContext = () => {
 
 const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    userObserver();
+  }, []);
 
   //* neu Benutzer
-  const createUser = async (email, password) => {
+  const createUser = async (email, password, displayName) => {
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
         password
       );
+      //* benutzer profile aktualisieren
+      await updateProfile(auth.currentUser, {
+        displayName,
+      })
+
       console.log(userCredential);
-      navigate("/login")
-      toastSuccessNotify("Registered successfully")
+      navigate("/login");
+      toastSuccessNotify("Registered successfully");
     } catch (error) {
-        toastErrorNotify(error.message)
+      toastErrorNotify(error.message);
     }
   };
 
@@ -40,21 +55,34 @@ const AuthProvider = ({ children }) => {
         password
       );
       console.log(userCredential);
-      navigate("/")
-      toastSuccessNotify("Logged in successfully")
+      navigate("/");
+      toastSuccessNotify("Logged in successfully");
     } catch (error) {
-        toastErrorNotify(error.message)
+      toastErrorNotify(error.message);
     }
   };
 
   const logOut = () => {
-    signOut(auth).then(()=>{
-        toastSuccessNotify("Logged out successfully")
+    signOut(auth)
+      .then(() => {
+        toastSuccessNotify("Logged out successfully");
         //Sign-out successful.
-    }).catch((error)=> {
+      })
+      .catch((error) => {
         //An error happened
-    })
-  }
+      });
+  };
+
+  const userObserver = () => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+          const {email, displayName,photoURL} = user
+        setCurrentUser({email, displayName,photoURL})
+      } else {
+        setCurrentUser(false)
+      }
+    });
+  };
 
   const values = { currentUser, createUser, signIn, logOut };
 
