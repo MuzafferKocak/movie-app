@@ -1,9 +1,10 @@
-import React from 'react'
+import React from "react";
+import { useMovieContext } from "../context/MovieProvider";
 
 const Main = () => {
-  return (
-    <div>Main</div>
-  )
-}
+  const { movies, loading } = useMovieContext();
+  console.log(loading, movies);
+  return <div>Main</div>;
+};
 
-export default Main
+export default Main;
