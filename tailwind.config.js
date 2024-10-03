@@ -2,9 +2,8 @@
 const defaultTheme = require("tailwindcss/defaultTheme");
 module.exports = {
   content: ["./src/**/*.{html,js,jsx}"],
-  
+
   theme: {
-    
     extend: {
       colors: {
         "gray-dark-main": "#23242a",
@@ -17,6 +16,5 @@ module.exports = {
       },
     },
   },
-  darkMode: 'selector'
+  darkMode: "selector",
 };
-

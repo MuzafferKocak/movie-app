@@ -11,7 +11,11 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import { toastErrorNotify, toastSuccessNotify, toastWarnNotify } from "../helpers/ToastNotify";
+import {
+  toastErrorNotify,
+  toastSuccessNotify,
+  toastWarnNotify,
+} from "../helpers/ToastNotify";
 
 const AuthContext = createContext();
 
@@ -21,7 +25,9 @@ export const useAuthContext = () => {
 };
 
 const AuthProvider = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState(JSON.parse(sessionStorage.getItem("currentUser"))|| false);
+  const [currentUser, setCurrentUser] = useState(
+    JSON.parse(sessionStorage.getItem("currentUser")) || false
+  );
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -39,7 +45,7 @@ const AuthProvider = ({ children }) => {
       //* benutzer profile aktualisieren
       await updateProfile(auth.currentUser, {
         displayName,
-      })
+      });
 
       console.log(userCredential);
       navigate("/login");
@@ -79,40 +85,49 @@ const AuthProvider = ({ children }) => {
   const userObserver = () => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
-          const {email, displayName,photoURL} = user
-        setCurrentUser({email, displayName,photoURL})
-        sessionStorage.setItem("currentUser", JSON.stringify({email, displayName,photoURL}))
+        const { email, displayName, photoURL } = user;
+        setCurrentUser({ email, displayName, photoURL });
+        sessionStorage.setItem(
+          "currentUser",
+          JSON.stringify({ email, displayName, photoURL })
+        );
       } else {
-        setCurrentUser(false)
-        sessionStorage.removeItem("CurrentUser")
+        setCurrentUser(false);
+        sessionStorage.removeItem("CurrentUser");
       }
     });
   };
 
-  const googleProvider = ()=> {
-    const provider = new GoogleAuthProvider()
+  const googleProvider = () => {
+    const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
-    .then((result)=> {
-        navigate("/")
-        toastSuccessNotify("Logged in successfuly")
-
-    }).catch((error)=> {
-        toastErrorNotify(error.message)
-    })
-  }
-//* password zurück setzen
-  const forgotPassword = (email)=>{
+      .then((result) => {
+        navigate("/");
+        toastSuccessNotify("Logged in successfuly");
+      })
+      .catch((error) => {
+        toastErrorNotify(error.message);
+      });
+  };
+  //* password zurück setzen
+  const forgotPassword = (email) => {
     sendPasswordResetEmail(auth, email)
-    .then(()=> {
-        toastWarnNotify("Please check your mail box")
+      .then(() => {
+        toastWarnNotify("Please check your mail box");
+      })
+      .catch((error) => {
+        toastErrorNotify(error.message);
+      });
+  };
 
-    })
-    .catch((error)=>{
-        toastErrorNotify(error.message)
-    })
-  }
-
-  const values = { currentUser, createUser, signIn, logOut, googleProvider, forgotPassword };
+  const values = {
+    currentUser,
+    createUser,
+    signIn,
+    logOut,
+    googleProvider,
+    forgotPassword,
+  };
 
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
 };

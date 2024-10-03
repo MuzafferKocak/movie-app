@@ -8,7 +8,7 @@ const defaultImage =
 
 const MovieCard = ({ title, poster_path, overview, vote_average, id }) => {
   const { currentUser } = useAuthContext();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const getVoteClass = (vote) => {
     if (vote >= 8) {
@@ -20,8 +20,11 @@ const MovieCard = ({ title, poster_path, overview, vote_average, id }) => {
     }
   };
   return (
-    <div className="movie" id="container" 
-    onClick={()=> navigate("/details/" + id)}>
+    <div
+      className="movie"
+      id="container"
+      onClick={() => navigate("/details/" + id)}
+    >
       <img
         loading="lazy"
         src={poster_path ? IMG_API + poster_path : defaultImage}

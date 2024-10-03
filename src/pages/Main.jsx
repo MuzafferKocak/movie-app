@@ -9,14 +9,14 @@ const SEARCH_API = `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}
 
 const Main = () => {
   const { movies, loading, getMovies } = useMovieContext();
-  const {currentUser} = useAuthContext()
+  const { currentUser } = useAuthContext();
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (searchTerm && currentUser) {
       getMovies(SEARCH_API + searchTerm);
-    } else if (!currentUser) { 
+    } else if (!currentUser) {
       toastWarnNotify("Please log in to search a movie");
     } else {
       toastWarnNotify("Please enter a text");
