@@ -21,7 +21,7 @@ export const useAuthContext = () => {
 };
 
 const AuthProvider = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState(false);
+  const [currentUser, setCurrentUser] = useState(JSON.parse(sessionStorage.getItem("currentUser"))|| false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -81,8 +81,10 @@ const AuthProvider = ({ children }) => {
       if (user) {
           const {email, displayName,photoURL} = user
         setCurrentUser({email, displayName,photoURL})
+        sessionStorage.setItem("currentUser", JSON.stringify({email, displayName,photoURL}))
       } else {
         setCurrentUser(false)
+        sessionStorage.removeItem("CurrentUser")
       }
     });
   };
